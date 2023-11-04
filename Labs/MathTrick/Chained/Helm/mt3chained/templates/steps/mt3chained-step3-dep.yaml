@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mt3chained-step3-dep
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: mt3chained
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      tier: mt3chained-step3-pod
+  template:
+    metadata:
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/mt3chained-cm.yaml") . | sha256sum }}    
+      labels:
+        tier: mt3chained-step3-pod
+        color: tomato
+    spec:
+      containers:
+      - name: mt3chained-step3
+        image: {{ .Values.repo }}/mt3chained-step3:{{ .Values.tags.mt3chainedstep3 }}
+        ports:
+        - containerPort: 80
+        envFrom:
+        - configMapRef:
+            name: mt3chained-config        
+        env:
+        - name: NextStepEndpoint
+          value: http://mt3chained-step4-svc:5040
+        - name: CalcStepVariable
+          value: "3"

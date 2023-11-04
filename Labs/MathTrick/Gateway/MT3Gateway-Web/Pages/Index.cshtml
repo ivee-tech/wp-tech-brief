@@ -1,0 +1,168 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Math Trick 3";
+}
+
+<h1 style="position: absolute; right: 20px; top: 20px"><span class="badge text-light bg-success">Gateway</span></h1>
+<div style="position: absolute; right: 20px; top: 70px">
+    <a href="" data-toggle="modal" data-target="#modalCenter">View System Diagram</a>
+</div>
+<div class="px-2 py-2 my-3 text-center">
+    <h1 class="display-4 fw-bold">Always Ends with <strong>3</strong> Math Trick</h1>
+    <p class="lead mb-1 text-left">You pick a number and then perform the calculation steps below.  After all the calculations have completed, your final result will always be <strong>3</strong>, regardless of the number you picked.</p>
+</div>
+<div class="container">
+    <div class="row">
+        <div class="col-sm-5">
+            <div class="card bg-light mb-3">
+                <div class="card-header"><h1 class="display-6">Process:</h1></div>
+                <div class="card-body">
+                    <ul class="list-group">
+                        <li class="list-group-item">Start by picking a number between 1 and 10.</li>
+                        <li class="list-group-item">
+                            Calculation Steps:<br />
+                            <ol>
+                                <li>Double the number.</li>
+                                <li>Add 9 to result.</li>
+                                <li>Subtract 3 from the result.</li>
+                                <li>Divide the result by 2.</li>
+                                <li>Subtract the original number from result.</li>
+                            </ol>
+                        </li>
+                        <li class="list-group-item">Final result will always be <strong>3</strong>.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-7">
+            <div class="card bg-light mb-3">
+                <div class="card-header"><h1 class="display-6">Try it Yourself:</h1></div>
+                <div class="card-body">
+                    <form method="post">
+                        <ul class="list-group">
+                            <li class="list-group-item">
+                                <div class="container-fluid" style="padding: 0">
+                                    <div class="row">
+                                        <div class="col" style="padding-top: 10px">
+                                            Pick a number:
+                                            <select data-val="true" asp-for="PickedNumber">
+                                                <option value="1">1</option>
+                                                <option value="2">2</option>
+                                                <option value="3">3</option>
+                                                <option value="4">4</option>
+                                                <option value="5">5</option>
+                                                <option value="6">6</option>
+                                                <option value="7">7</option>
+                                                <option value="8">8</option>
+                                                <option value="9">9</option>
+                                                <option value="10">10</option>
+                                            </select>
+                                        </div>
+                                        <div class="col text-right">
+                                            <h3>
+                                                Final Result:
+                                                @if (Model.FinalResults < 0)
+                                                {
+                                                    <span class="badge badge-secondary">X</span>
+                                                }
+                                                else if (Model.FinalResults == 3)
+                                                {
+                                                    <span class="badge badge-success">@Model.FinalResults</span>
+                                                }
+                                                else
+                                                {
+                                                    <span class="badge badge-danger">@Model.FinalResults</span>
+                                                }
+                                            </h3>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <div class="container-fluid" style="padding: 0">
+                                    <div class="row">
+                                        <div class="col">Perform Calculations: <button type="submit" class="btn btn-primary btn-sm" id="submit">Start</button></div>
+                                        <div class="col text-right">
+                                            Failure Rate: <button type="button" class="btn btn-danger btn-sm" id="submit">@Model.FailureRate</button>
+                                            &nbsp;&nbsp;
+                                            Retries: <button type="button" class="btn btn-info btn-sm" id="submit">@Model.Retries</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="list-group-item">
+                                <div class="container-fluid" style="padding: 0">
+                                    <div class="row">
+                                        <div class="col">
+                                            Calculation Actions Performed:
+                                        </div>
+                                        <div class="col text-right">
+                                            <input type="checkbox" id="cbAutoPilot" />
+                                            <label for="cbAutoPilot"> Auto Pilot</label>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col">
+                                            <input type="hidden" asp-for="CalculationActions" />
+                                            <table class="table table-sm">
+                                                <thead>
+                                                    <tr>
+                                                        <th scope="col">Platform</th>
+                                                        <th scope="col">Step</th>
+                                                        <th scope="col">Calculation</th>
+                                                        <th scope="col">Result</th>
+                                                        <th scope="col">Retries</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @foreach (var cs in Model.CalculationActions)
+                                                    {
+                                                        <tr>
+                                                            <td><img src="@Model.GetImageName(cs.CalcPlatform)" width="34" /></td>
+                                                            <td>@cs.CalcStep</td>
+                                                            <td>@cs.CalcPerformed</td>
+                                                            <td>@cs.CalcResult</td>
+                                                            <td>@cs.CalcRetries</td>
+                                                        </tr>
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal -->
+<div class="modal fade" id="modalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body text-center">
+                <img src="images/MT3GatewayOverview.png" width="1020" />
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    setInterval(() => {
+       var auto = document.getElementById("cbAutoPilot");
+       if (auto.checked)
+       {
+           newValue = Math.round(Math.random() * 11);
+           let picked = document.getElementById("PickedNumber");
+           picked.value = newValue;
+           document.getElementById("submit").click();
+       }
+     }, "2000")
+</script>
+

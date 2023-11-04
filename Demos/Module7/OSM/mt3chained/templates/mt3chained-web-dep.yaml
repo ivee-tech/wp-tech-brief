@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mt3chained-web-dep
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: mt3chained
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      tier: mt3chained-web-pod
+  template:
+    metadata:
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/mt3chained-cm.yaml") . | sha256sum }}    
+      labels:
+        tier: mt3chained-web-pod
+        color: tomato
+        mylabel: somevalue
+    spec:
+      serviceAccountName: mt3chained-web-sa                          
+      containers:
+      - name: mt3chained-web
+        image: {{ .Values.repo }}/mt3chained-web:{{ .Values.tags.mt3chainedweb }}
+        ports:
+        - containerPort: 80
+        envFrom:
+        - configMapRef:
+            name: mt3chained-config
+        env:
+        - name: MT3ChainedAPIEndpoint
+          value: http://mt3chained-step1-svc:5010       
+            
+

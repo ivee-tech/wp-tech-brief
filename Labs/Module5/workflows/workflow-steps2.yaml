@@ -1,0 +1,54 @@
+name: <githubRepoName>
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  APP_NAME: <appName>
+  LOGIN_SERVER: <acrServerName>
+  KV_NAME: <keyVaultName>
+  SECRET_NAME: <appName>-tag
+
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    
+      - name: Check-out Repo 
+        uses: actions/checkout@v2
+        with:
+          path: Chained/<githubRepoName>
+      
+      - name: Check-out MathTrickCore 
+        uses: actions/checkout@v2
+        with:
+          repository: <githubAlias>/MathTrickCore
+          path: MathTrickCore
+          token: ${{ secrets.PAT_GITHUB }}
+
+      # Connect to Azure Container Registry (ACR)
+      - name: ACR login
+        uses: azure/docker-login@v1
+        with:
+          login-server: ${{ env.LOGIN_SERVER }}
+          username: ${{ secrets.ACR_CLIENT_ID }}
+          password: ${{ secrets.ACR_CLIENT_PASSWORD }}
+      # Container build and push to a Azure Container Registry (ACR)
+      - name: Build, tag, and push image to ACR
+        uses: docker/build-push-action@v2
+        with:
+          context: ./
+          file: Chained/<githubRepoName>/Dockerfile
+          push: true
+          tags: |
+            ${{ env.LOGIN_SERVER }}/${{ env.APP_NAME }}:${{ github.run_number }}
+            ${{ env.LOGIN_SERVER }}/${{ env.APP_NAME }}:latest
+      - name: Azure login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+      - run: |
+          az keyvault secret set --vault-name ${{ env.KV_NAME }} --name ${{ env.SECRET_NAME }} --value ${{ github.run_number }}

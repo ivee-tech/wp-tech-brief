@@ -1,0 +1,33 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+    nginx.ingress.kubernetes.io/use-regex: "true"
+  name: colors-ingress-staging
+spec:
+  rules:
+    - http:
+        paths:
+        - path: /staging/blue(/|$)(.*)
+          pathType: Prefix
+          backend:
+            service: 
+              name: blue-svc
+              port: 
+                number: 8100
+        - path: /staging/red(/|$)(.*)
+          pathType: Prefix
+          backend:
+            service: 
+              name: red-svc
+              port: 
+                number: 8100         
+        - path: /staging/yellow(/|$)(.*)
+          pathType: Prefix
+          backend:
+            service: 
+              name: yellow-svc
+              port: 
+                number: 8100                   

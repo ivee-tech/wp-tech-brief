@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mt3gateway-gateway-dep
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: mt3gateway
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      tier: mt3gateway-gateway-pod
+  template:
+    metadata:
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/mt3gateway-cm.yaml") . | sha256sum }}        
+      labels:
+        tier: mt3gateway-gateway-pod
+        color: lime        
+    spec:
+      containers:
+      - name: mt3gateway-gateway
+        image: {{ .Values.repo }}/mt3gateway-gateway:{{ .Values.tags.mt3gatewaygateway }}
+        ports: 
+        - containerPort: 80
+        envFrom:
+        - configMapRef:
+            name: mt3gateway-config
+        env:
+        - name: temp3
+          value: {{ .Values.myvalue.one.two }}
+        - name: MT3GatewayStep1Endpoint
+          value: http://mt3gateway-step1-svc:5010
+        - name: MT3GatewayStep2Endpoint
+          value: http://mt3gateway-step2-svc:5020
+        - name: MT3GatewayStep3Endpoint
+          value: http://mt3gateway-step3-svc:5030
+        - name: MT3GatewayStep4Endpoint
+          value: http://mt3gateway-step4-svc:5040
+        - name: MT3GatewayStep5Endpoint
+          value: http://mt3gateway-step5-svc:5050
+

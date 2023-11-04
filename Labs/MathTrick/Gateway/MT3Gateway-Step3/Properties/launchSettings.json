@@ -1,0 +1,18 @@
+{
+  "$schema": "http://json.schemastore.org/launchsettings.json",
+  "profiles": {
+    "MathTrick3Step3": {
+      "commandName": "Project",
+      "environmentVariables": {
+        "CalcStepVariable": "13",
+        "FailureRate": "70",
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "http://localhost:5000"
+    },
+    "Bridge to Kubernetes": {
+      "commandName": "AzureDevSpacesLocal",
+      "launchBrowser": true
+    }
+  }
+}

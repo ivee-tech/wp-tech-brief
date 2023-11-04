@@ -1,0 +1,19 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+  name: mt3gateway-web-ing
+  namespace: {{ .Values.namespace }}
+spec:
+  rules:
+    - http:
+        paths:
+          - path: /gateway/(.*)
+            pathType: Prefix
+            backend:
+              service:
+                name: mt3gateway-web-svc
+                port: 
+                  name: http

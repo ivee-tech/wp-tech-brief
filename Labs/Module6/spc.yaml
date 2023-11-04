@@ -1,0 +1,27 @@
+apiVersion: secrets-store.csi.x-k8s.io/v1
+kind: SecretProviderClass
+metadata:
+  name: azure-kv-secret
+spec:
+  provider: azure
+  # BEGIN NEW SECTION
+  secretObjects:
+  - data:
+    - key: MySecret
+      objectName: SampleSecret
+    secretName: k8s-secret
+    type: Opaque
+  # END NEW SECTION
+  parameters:
+    usePodIdentity: "false"
+    useVMManagedIdentity: "true"
+    userAssignedIdentityID: bc1e1f3b-eb78-4290-8c7e-29323d9f5eeb # $KV_CLIENT_ID    
+    keyvaultName: ktb-kv # KV_NAME
+    cloudName: ""
+    objects:  |
+      array:
+        - |
+          objectName: SampleSecret
+          objectType: secret 
+          objectVersion: "" 
+    tenantId: 16b3c013-d300-468d-ac64-7eda0820b6d3 # $TENANT_ID

@@ -1,0 +1,11 @@
+apiVersion: specs.smi-spec.io/v1alpha4
+kind: HTTPRouteGroup
+metadata:
+  name: steps2-5-service-routes
+  namespace: {{ .Values.namespace }}
+spec:
+  matches:
+    - name: steps2-5-match
+      pathRegex: "/api/.*"
+      methods:
+      - POST

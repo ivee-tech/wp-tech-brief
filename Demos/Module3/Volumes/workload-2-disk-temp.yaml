@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: workload-2-disk
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: workload-2
+  template:
+    metadata:
+      labels:
+        app: workload-2
+        color: salmon
+    spec:
+      containers:
+        - name: workload
+          image: nginx:1.18
+          ports:
+            - containerPort: 80
+          volumeMounts:              
+          - name: disk-volume
+            mountPath: /disk
+      nodeSelector:
+        kubernetes.io/os: linux
+      volumes:
+        - name: disk-volume
+          azureDisk:            
+            diskName: "disk4"
+            diskURI: "/subscriptions/ad7f75c0-eef5-46f2-aee1-447cb2fb313c/resourcegroups/kiz-kube-rg/providers/Microsoft.Compute/disks/disk4"
+            readOnly: false
+            kind: Managed

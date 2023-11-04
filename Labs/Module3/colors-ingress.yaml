@@ -1,0 +1,32 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/rewrite-target: /$1
+  name: colors-ingress
+spec:
+  rules:
+    - http:
+        paths:
+        - path: /blue/(.*)
+          pathType: Prefix
+          backend:
+            service: 
+              name: blue-svc
+              port: 
+                number: 8100
+        - path: /red/(.*)
+          pathType: Prefix
+          backend:
+            service: 
+              name: red-svc
+              port: 
+                number: 8100         
+        - path: /yellow/(.*)
+          pathType: Prefix
+          backend:
+            service: 
+              name: yellow-svc
+              port: 
+                number: 8100                   

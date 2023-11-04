@@ -1,0 +1,17 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"label": "bridge-to-kubernetes.resource",
+			"type": "bridge-to-kubernetes.resource",
+			"resource": "mt3chained-step2-svc",
+			"resourceType": "service",
+			"ports": [
+				3000
+			],
+			"targetCluster": "kizakscluster",
+			"targetNamespace": "chained",
+			"useKubernetesServiceEnvironmentVariables": false
+		}
+	]
+}

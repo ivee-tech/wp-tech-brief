@@ -1,0 +1,30 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "pwa-node",
+            "request": "launch",
+            "name": "Launch NodeJS Program with Kubernetes",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "program": "${workspaceFolder}\\Chained\\MT3Chained-Step2-NodeJS\\server.js",
+            "preLaunchTask": "bridge-to-kubernetes.resource",
+            "env": {
+                "GRPC_DNS_RESOLVER": "native"
+            }
+        },
+        {
+            "type": "pwa-node",
+            "request": "launch",
+            "name": "Launch NodeJS Program",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "program": "${workspaceFolder}\\Chained\\MT3Chained-Step2-NodeJS\\server.js"
+        }
+    ]
+}

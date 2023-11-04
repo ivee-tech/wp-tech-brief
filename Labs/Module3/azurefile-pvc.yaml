@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: azurefile-pvc
+spec:
+  selector: 
+    matchLabels:
+      storage-provider: azure-file-share
+  storageClassName: azurefile-csi
+  accessModes:
+    - ReadWriteMany
+  resources:
+    requests:
+      storage: 5Gi

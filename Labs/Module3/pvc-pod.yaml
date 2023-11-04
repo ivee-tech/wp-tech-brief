@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: pvc-pod
+spec:
+  nodeSelector:
+    kubernetes.io/os: linux  
+  containers:
+  - image: nginx
+    name: nginx
+    volumeMounts:
+    - mountPath: /sharedfolder
+      name: azure-file-volume
+  volumes:
+  - name: azure-file-volume
+    persistentVolumeClaim:
+      claimName: azurefile-pvc
+
+
+      

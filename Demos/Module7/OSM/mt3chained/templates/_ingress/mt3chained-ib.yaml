@@ -1,0 +1,15 @@
+kind: IngressBackend
+apiVersion: policy.openservicemesh.io/v1alpha1
+metadata:
+  name: mt3chained-ingress-backend
+  namespace: {{ .Values.namespace }}
+spec:
+  backends:
+  - name: mt3chained-web-svc
+    port:
+      number: 80
+      protocol: http
+  sources:
+  - kind: Service
+    namespace: ingress-nginx
+    name: ingress-nginx-controller

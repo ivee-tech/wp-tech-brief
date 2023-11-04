@@ -1,0 +1,60 @@
+name: Math Trick 3 - Chained-Web-CI
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  APP_NAME: <appName>
+  LOGIN_SERVER: <acrServerName>
+  CLUSTER_NAME: <clusterName>
+  CLUSTER_RESOURCE_GROUP: <clusterResourceGroup>
+  NAMESPACE: <namespaceName>
+
+jobs:
+
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+    
+      - name: Check Out Repo 
+        uses: actions/checkout@v2
+
+      # Connect to Azure Container Registry (ACR)
+      - name: ACR login
+        uses: azure/docker-login@v1
+        with:
+          login-server: ${{ env.LOGIN_SERVER }}
+          username: ${{ secrets.ACR_CLIENT_ID }}
+          password: ${{ secrets.ACR_CLIENT_PASSWORD }}
+
+      # Container build and push to a Azure Container Registry (ACR)
+      - name: Build, tag, and push image to ACR
+        uses: docker/build-push-action@v2
+        with:
+          context: ./
+          file: Dockerfile
+          push: true
+          tags: |
+            ${{ env.LOGIN_SERVER }}/${{ env.APP_NAME }}:${{ github.run_number }}
+
+      # Set the target Azure Kubernetes Service (AKS) cluster. 
+      - uses: azure/aks-set-context@v1
+        with:
+          creds: '${{ secrets.AZURE_CREDENTIALS }}'
+          cluster-name: ${{ env.CLUSTER_NAME }}
+          resource-group: ${{ env.CLUSTER_RESOURCE_GROUP }}
+
+      # Create namespace if doesn't exist
+      - run: |
+          kubectl create namespace ${{ env.NAMESPACE }} --dry-run -o json | kubectl apply -f -
+      # Deploy app to AKS
+      - uses: azure/k8s-deploy@v1
+        with:
+          manifests: |
+            k8s-deployment.yaml
+            k8s-service.yaml
+          images: |
+            ${{ env.LOGIN_SERVER }}/${{ env.APP_NAME }}:${{ github.run_number }}
+          namespace: ${{ env.NAMESPACE }}

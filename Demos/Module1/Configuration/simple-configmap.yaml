@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: simple-configmap
+  labels:
+    scope: demo
+data:
+  MD_RABBITMQ_HOST: rabbit-svc
+  MD_TOPIC: "notifications"
+  MY_VALUE: "555"
+  
+  

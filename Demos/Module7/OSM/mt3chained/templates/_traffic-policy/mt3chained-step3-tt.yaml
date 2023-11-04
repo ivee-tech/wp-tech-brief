@@ -1,0 +1,19 @@
+kind: TrafficTarget
+apiVersion: access.smi-spec.io/v1alpha3
+metadata:
+  name: step3-traffic-target
+  namespace: {{ .Values.namespace }}
+spec:  
+  destination:
+    kind: ServiceAccount
+    name: mt3chained-step3-sa          
+    namespace: {{ .Values.namespace }}
+  rules:
+  - kind: HTTPRouteGroup
+    name: steps2-5-service-routes
+    matches:
+    - steps2-5-match
+  sources:
+  - kind: ServiceAccount
+    name: mt3chained-step2-sa
+    namespace: {{ .Values.namespace }}    

@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mt3chained-step3-svc
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: mt3chained
+spec:
+  selector:
+    tier: mt3chained-step3-pod
+  ports:
+    - protocol: TCP
+      port: 5030
+      targetPort: 80
+      name: http
+  type: ClusterIP

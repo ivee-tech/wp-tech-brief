@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-poda
+  labels:
+    tier: backend
+    app: myapp    
+spec:
+  nodeSelector:
+    kubernetes.io/os: linux
+  containers:
+    # Getting the latest nginx from hub.docker.com
+    - name: nginx
+      image: kizacr.azurecr.io/messagedelegator:latest
+      env:
+        - name: mysetting
+          value: value    
+        - name: mysetting2
+          value: value2    
+      ports:
+        - containerPort: 80
+          protocol: TCP
+  restartPolicy: Always    

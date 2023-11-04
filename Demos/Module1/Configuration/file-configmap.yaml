@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: file-configmap
+  labels:
+    scope: demo
+data:
+  app.config: |-
+    { 
+      "settings": 
+      {
+        "title": "Example Glossary",
+        "option": "123"
+      }
+    }
+  replace.sh: |-
+    sed -i 's/123/456/g' app.config
+
+
+  

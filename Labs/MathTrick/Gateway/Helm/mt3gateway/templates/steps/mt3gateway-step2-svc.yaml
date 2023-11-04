@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mt3gateway-step2-svc
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: mt3gateway
+spec:
+  selector:
+    tier: mt3gateway-step2-pod
+  ports:
+    - protocol: TCP
+      port: 5020
+      targetPort: 80
+      name: http
+  type: ClusterIP

@@ -1,0 +1,30 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: sample-cron-job  
+spec:
+  schedule: "* * * * *"
+  successfulJobsHistoryLimit: 6
+  failedJobsHistoryLimit: 6
+  jobTemplate:
+    spec:
+      completions: 1 
+      ttlSecondsAfterFinished: 270
+      template:
+        metadata:
+          labels:
+            color: yellow
+        spec:
+          containers:
+            - name: hello
+              image: busybox
+              args:
+                - /bin/sh
+                - -c
+                - date; echo Hello from the Kubernetes cluster
+                - sleep 3
+          restartPolicy: OnFailure
+          nodeSelector:
+            kubernetes.io/os: linux
+      
+

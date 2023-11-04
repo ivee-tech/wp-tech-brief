@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mt3gateway-web
+  labels:
+    app: mt3gateway
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      tier: mt3gateway-web
+  template:
+    metadata:
+      labels:
+        tier: mt3gateway-web
+    spec:
+      containers:
+      - name: mt3gateway-web
+        image: somecontainerrepo/mt3gateway-web:latest
+        ports:
+        - containerPort: 80
+        env:
+        - name: FAILURE_RATE
+          value: "50"
+        - name: RETRIES
+          value: "5"
+        - name: MT3GatewayAPIEndpoint
+          value: http://mt3gateway-gateway-svc:5000

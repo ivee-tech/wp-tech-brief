@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mt3chained-step5-dep
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: mt3chained
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      tier: mt3chained-step5-pod
+  template:
+    metadata:
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/mt3chained-cm.yaml") . | sha256sum }}    
+      labels:
+        tier: mt3chained-step5-pod
+        color: tomato
+    spec:
+      containers:
+      - name: mt3chained-step5
+        image: {{ .Values.repo }}/mt3chained-step5:{{ .Values.tags.mt3chainedstep5 }}
+        ports:
+        - containerPort: 80
+        envFrom:
+        - configMapRef:
+            name: mt3chained-config        

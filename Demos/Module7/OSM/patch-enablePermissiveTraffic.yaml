@@ -1,0 +1,4 @@
+spec:
+  traffic:
+    enablePermissiveTrafficPolicyMode: true
+ 

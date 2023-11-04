@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pvc-volume-dep
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+       target: pvc-volume-pod
+  template:
+    metadata:
+      name: pvc-volume-pod
+      labels:
+        target: pvc-volume-pod
+        color: Yellow
+    spec:
+      nodeSelector:            
+        kubernetes.io/os: linux  
+      containers:
+      - name: nginx
+        image: k8slab/nginx:1.0
+        ports:
+        - containerPort: 80
+          protocol: TCP
+        resources: 
+          requests:
+            cpu: 80m
+            memory: 128Mi
+          limits:
+            cpu: 250m
+            memory: 256Mi   
+        volumeMounts:
+        - mountPath: "/usr/pvc"
+          name: mypvc
+      volumes:
+      - name: mypvc
+        persistentVolumeClaim:
+          claimName: pvc-volume-disk   

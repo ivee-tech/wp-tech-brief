@@ -1,0 +1,16 @@
+apiVersion: policy.openservicemesh.io/v1alpha1
+kind: Egress
+metadata:
+  name: worktime
+  namespace: {{ .Values.namespace }} 
+spec:
+  sources:
+  - kind: ServiceAccount
+    name: mt3chained-web-sa
+    namespace: {{ .Values.namespace }}    
+  hosts:
+  # https://www.timeapi.io/api/Time/current/zone?timeZone=America/Denver
+  - timeapi.io
+  ports:
+  - number: 433
+    protocol: https

@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mt3chained-web-svc
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: mt3chained
+spec:
+  selector:
+    tier: mt3chained-web-pod
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+      name: http
+  type: NodePort # LoadBalancer

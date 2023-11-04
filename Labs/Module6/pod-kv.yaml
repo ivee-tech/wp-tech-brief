@@ -1,0 +1,30 @@
+kind: Pod
+apiVersion: v1
+metadata:
+  name: pod-kv
+spec:
+  containers:
+    - name: busybox
+      image: k8s.gcr.io/e2e-test-images/busybox:1.29-1
+      command:
+        - "/bin/sleep"
+        - "10000"
+      volumeMounts:
+      - name: secrets-store01
+        mountPath: "/mnt/secrets-store"
+        readOnly: true
+      # BEGIN NEW SECTION
+      env:
+      - name: SECRET_VALUE
+        valueFrom:
+          secretKeyRef:
+            name: k8s-secret
+            key: MySecret
+      # END NEW SECTION
+  volumes:
+    - name: secrets-store01
+      csi:
+        driver: secrets-store.csi.k8s.io
+        readOnly: true
+        volumeAttributes:
+          secretProviderClass: "azure-kv-secret"

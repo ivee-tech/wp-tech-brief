@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: workload-1-ephemeral
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: workload-1
+  template:
+    metadata:
+      labels:
+        app: workload-1
+        color: lime
+    spec:
+      containers:
+        - name: workload
+          image: nginx:1.18
+          ports:
+            - containerPort: 80
+          volumeMounts:              
+          - name: cm-volume
+            mountPath: /config        
+          - name: sec-volume
+            mountPath: /secretsimple  
+          - name: cache-volume
+            mountPath: /cache
+          - name: host-volume
+            mountPath: /hostdata
+      nodeSelector:
+        kubernetes.io/os: linux
+      volumes:
+        - name: cm-volume
+          configMap:
+            name: configmap-file
+        - name: sec-volume
+          secret:
+            secretName: secret-simple
+        - name: cache-volume
+          emptyDir: {}
+        - name: host-volume
+          hostPath:
+            # directory location on host
+            path: /host-data-folder
+            # this field is optional
+            type: DirectoryOrCreate

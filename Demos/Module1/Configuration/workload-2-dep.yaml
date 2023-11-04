@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: workload-2-dep
+  labels:
+    scope: demo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: workload-2
+  template:
+    metadata:
+      labels:
+        app: workload-2
+        color: yellow
+    spec:
+      nodeSelector:
+        kubernetes.io/os: linux
+      containers:
+        - name: workload
+          image: nginx:1.18
+          ports:
+            - containerPort: 80
+          envFrom:
+            - secretRef:
+                name: simple-secret
+          env:
+            - name: MD_SERVICE_MAP_FILE
+              value: /config/service-mappings.json
+            - name: MD_ACKNOWLEDGE_HEARTBEAT
+              value: "false"
+            - name: DB_PASSWORD 
+              valueFrom:
+                secretKeyRef:
+                  name: simple-secret2
+                  key: dbpassword                  
+          volumeMounts:
+          - name: secret-volume          
+            mountPath: /secret-data
+      volumes:
+        - name: secret-volume
+          secret:
+            secretName: file-secret        

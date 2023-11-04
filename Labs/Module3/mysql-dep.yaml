@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql-dep
+spec: 
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql
+  template:
+    metadata:
+      name: mysql-pod
+      labels:
+        app: mysql
+    spec:
+      nodeSelector:
+        kubernetes.io/os: linux
+      containers:
+      - name: mysql
+        image: mysql:5.7
+        env:
+        - name: MYSQL_ALLOW_EMPTY_PASSWORD
+          value: "true"
+        ports:
+        - containerPort: 3306
+        volumeMounts:
+        - name: mysql-initdb
+          mountPath: /docker-entrypoint-initdb.d
+        - name: mysql-cnf
+          mountPath: /etc/mysql/my.cnf
+          subPath: my.cnf
+        - name: mysql-log
+          mountPath: /usr/log/
+      - name: logreader
+        image: busybox
+        command:
+          - "/bin/sh"
+        args:
+          - "-c"
+          - "tail -f /usr/log/general.log;"
+        volumeMounts: 
+        - name: mysql-log
+          mountPath: /usr/log/
+      volumes:
+      - name: mysql-initdb
+        configMap:
+          name: mysql-initdb-cm
+      - name: mysql-cnf
+        configMap:
+          name: mysql-cnf-cm            
+      - name: mysql-log
+        emptyDir: {}
+                

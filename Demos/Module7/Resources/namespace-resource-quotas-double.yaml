@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: namespace-resource-quota-1
+  labels:
+    app: demo
+spec:
+  hard:
+    requests.cpu: "2000m"    
+    limits.cpu: "3600m"
+    requests.memory: 2.5Gi
+    limits.memory: 5Gi
+---
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: namespace-resource-quota-2
+  labels:
+    app: demo
+spec:
+  hard:
+    pods: "20"
+    configmaps: "20"
+    secrets: "80"    
+    persistentvolumeclaims: "8"
+    services: "20"
+    services.loadbalancers: "4"
+    

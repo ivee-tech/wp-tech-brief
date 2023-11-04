@@ -1,0 +1,15 @@
+repo: scubakiz # ktbacr.azurecr.io
+namespace: gateway
+platform: dotnet
+myvalue:
+  one:
+    two: anothervalue
+tags:
+  mt3gatewayweb: latest 
+  mt3gatewaygateway: latest
+  mt3gatewaystep1: latest 
+  mt3gatewaystep2: latest
+  mt3gatewaystep2nodejs: latest  
+  mt3gatewaystep3: latest
+  mt3gatewaystep4: latest
+  mt3gatewaystep5: latest

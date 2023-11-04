@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: workload-1-dep
+  labels:
+    scope: demo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: workload-1
+  template:
+    metadata:
+      labels:
+        app: workload-1
+        color: lime
+    spec:
+      nodeSelector:
+        kubernetes.io/os: linux
+      containers:
+        - name: workload
+          image: nginx:1.18
+          ports:
+            - containerPort: 80
+          envFrom:
+            - configMapRef:
+                name: simple-configmap
+          env:
+            - name: MD_SERVICE_MAP_FILE
+              value: /config/service-mappings.json
+            - name: MD_ACKNOWLEDGE_HEARTBEAT
+              value: "false"
+            - name: PLAYER_INITIAL_LIVES 
+              valueFrom:
+                configMapKeyRef:
+                  name: simple-configmap2
+                  key: player_initial_lives
+          volumeMounts:
+          - name: configmap-volume          
+            mountPath: /config-data
+      volumes:
+        - name: configmap-volume
+          configMap:
+            defaultMode: 0744
+            name: file-configmap

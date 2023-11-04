@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dep-statup-probe
+  labels:
+    app: demo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: probes
+  template:
+    metadata:
+      labels:
+        app: probes
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.14.2
+        ports:
+        - containerPort: 80
+        # The kubelet uses startup probes to know when a container application has started
+        # Pings the port every 10 seconds.  
+        # Retries it upto 30 times or until it succeeds
+        startupProbe:
+          httpGet:
+            path: /healthy
+            port: 80
+          failureThreshold: 1
+          periodSeconds: 15        

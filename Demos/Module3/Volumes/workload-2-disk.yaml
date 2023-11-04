@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: workload-2-disk
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: workload-2
+  template:
+    metadata:
+      labels:
+        app: workload-2
+        color: red
+    spec:
+      containers:
+        - name: workload
+          image: nginx:1.18
+          ports:
+            - containerPort: 80
+          volumeMounts:              
+          - name: disk-volume
+            mountPath: /disk
+      nodeSelector:
+        kubernetes.io/os: linux
+      volumes:
+        - name: disk-volume
+          azureDisk:            
+            diskName: "AZURE_DISK_NAME"
+            diskURI: "AZURE_DISK_URI"
+            readOnly: false
+            kind: Managed

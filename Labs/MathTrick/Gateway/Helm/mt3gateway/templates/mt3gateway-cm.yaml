@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mt3gateway-config
+  namespace: {{ .Values.namespace }}
+data:
+  FAILURE_RATE: "55"
+  RETRIES: "10"
+  APPINSIGHTS_INSTRUMENTATIONKEY: "ba3c284c-e59b-4b5b-aac4-79c19ab3d555"

@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mt3chained-step2-svc
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: mt3chained
+spec:
+  ports:
+  - protocol: TCP
+    port: 5020
+    targetPort: 80
+    name: http  
+  selector:
+    tier: mt3chained-step2-pod

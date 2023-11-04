@@ -1,0 +1,56 @@
+{
+    "apiVersion": "v1",
+    "kind": "Pod",
+    "metadata": {
+      "name": "nginx-pod3"
+    },
+    "spec": {
+      "containers": [
+        {
+          "name": "nginx",
+          "image": "nginx:1.18",
+          "ports": [
+            {
+              "containerPort": 8080,
+              "protocol": "TCP"
+            }
+          ],
+          "env": [
+            {
+              "name": "xyz",
+              "value": "123"
+            }
+          ]
+        },
+        {
+          "name": "mysql",
+          "image": "mysql:5.7",
+          "env": [
+            {
+              "name": "MYSQL_ALLOW_EMPTY_PASSWORD",
+              "value": "true"
+            }
+          ],
+          "ports": [
+            {
+              "containerPort": 3306,
+              "protocol": "TCP"
+            }
+          ]
+        },
+        {
+          "name": "counter",
+          "image": "centos:7",
+          "command": [
+            "bin/bash",
+            "-c",
+            "for i in {1..9} ; do echo $i ; sleep 1; done"
+          ]
+        }
+      ],
+      "nodeSelector": {
+        "kubernetes.io/os": "linux"
+      },
+      "restartPolicy": "Never"
+    }
+  }

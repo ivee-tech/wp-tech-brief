@@ -1,0 +1,13 @@
+repo: ktbacr.azurecr.io # scubakiz
+namespace: chained
+tags:
+  mt3chainedweb: latest 
+  mt3chainedstep1: latest 
+  mt3chainedstep2: latest 
+  mt3chainedstep2nodejs: latest  
+  mt3chainedstep3: latest 
+  mt3chainedstep4: latest 
+  mt3chainedstep5: latest
+ikey: ffffffff-ffff-ffff-ffff-ffffffffffff
+   
+  

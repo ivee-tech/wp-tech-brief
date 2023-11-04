@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: configmap-file
+  labels:
+    app: configmap-file
+data:
+  app.config : |-    
+    {
+      "glossary": 
+      {
+        "title": "example glossary",
+        "GlossTerm": "Standard Generalized Markup Language",
+        "Acronym": "SGML",
+        "Abbrev": "ISO 8879:1986"
+      }
+    }
+  prep.sh: |-  
+    sed -i s/dsds/
+  

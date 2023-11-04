@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: workload-3-dynamic-file
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: workload-3
+  template:
+    metadata:
+      labels:
+        app: workload-3
+        color: blue
+    spec:
+      containers:
+        - name: workload
+          image: nginx:1.18
+          ports:
+            - containerPort: 80
+          volumeMounts:              
+          - name: file-volume
+            mountPath: /files
+      nodeSelector:
+        kubernetes.io/os: linux
+      volumes:
+        - name: file-volume
+          persistentVolumeClaim:
+            claimName: dynamic-file-storage-pvc

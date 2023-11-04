@@ -1,0 +1,17 @@
+{
+  "name": "mt3gateway-step2-nodejs",
+  "version": "1.0.0",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "A Node JS microservice to calculate a Math Trick step.",
+  "dependencies": {
+    "applicationinsights": "^2.1.6",
+    "express": "^4.17.1"
+  }
+}

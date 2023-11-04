@@ -1,0 +1,11 @@
+apiVersion: specs.smi-spec.io/v1alpha4
+kind: HTTPRouteGroup
+metadata:
+  name: step1-service-routes
+  namespace: {{ .Values.namespace }}
+spec:
+  matches:
+    - name: step1-match
+      pathRegex: "/api/.*"
+      methods:
+      - GET

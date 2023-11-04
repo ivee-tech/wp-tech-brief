@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: simple-configmap2
+  labels:
+    scope: demo
+data:
+  player_initial_lives: "23"
+  game_status: READY
+  

@@ -1,0 +1,61 @@
+name: Math-Trick-3---Chained
+
+on:
+  workflow_dispatch: ~
+  push:
+    branches: [main]
+
+env:
+  KV_NAME: <azureKeyVaultName>
+  AKS_NAME: <aksName>
+  AKS_RESOURCE_GROUP: <aksResourceGroup>	
+
+jobs:
+
+  deploy-to-aks:
+    runs-on: ubuntu-latest
+    steps:
+    
+      - name: 'Checkout'  # Checkout the repository code.
+        uses: 'actions/checkout@v1'
+        
+      # Connect to Azure
+      - name: Azure login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          
+      # Get secrets
+      - name: Get Keyvault secrets
+        uses: Azure/get-keyvault-secrets@v1
+        with:
+          keyvault: ${{ env.KV_NAME }}
+          secrets: 'mt3chained-step1-tag,mt3chained-step2-nodejs-tag,mt3chained-step2-tag,mt3chained-step3-tag,mt3chained-step4-tag,mt3chained-step5-tag,mt3chained-web-tag' 
+        id: versiontags
+
+      - name: 'Set version tags'
+        uses: microsoft/variable-substitution@v1 
+        with:
+          files: mt3chained/values.yaml
+        env:
+          tags.mt3chainedweb: ${{ steps.versiontags.outputs.mt3chained-web-tag }}
+          tags.mt3chainedstep1: ${{ steps.versiontags.outputs.mt3chained-step1-tag }} 
+          tags.mt3chainedstep2: ${{ steps.versiontags.outputs.mt3chained-step2-tag }} 
+          tags.mt3chainedstep2nodejs: ${{ steps.versiontags.outputs.mt3chained-step2-nodejs-tag }}  
+          tags.mt3chainedstep3: ${{ steps.versiontags.outputs.mt3chained-step3-tag }} 
+          tags.mt3chainedstep4: ${{ steps.versiontags.outputs.mt3chained-step4-tag }} 
+          tags.mt3chainedstep5: ${{ steps.versiontags.outputs.mt3chained-step5-tag }} 
+
+      - name: Azure Kubernetes set context
+        uses: Azure/aks-set-context@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+          resource-group: ${{ env.AKS_RESOURCE_GROUP }}
+          cluster-name: ${{ env.AKS_NAME }}
+
+      - name: Helm tool installer
+        uses: Azure/setup-helm@v1
+
+      - name: Deploy
+        run: |
+          helm upgrade --install chained mt3chained/

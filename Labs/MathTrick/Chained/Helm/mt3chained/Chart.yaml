@@ -1,0 +1,5 @@
+apiVersion: v2
+appVersion: "1.1"
+description: A Helm chart for Math Trick
+name: mt3chained
+version: 0.1

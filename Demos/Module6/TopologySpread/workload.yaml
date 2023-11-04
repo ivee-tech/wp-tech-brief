@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: workload
+  labels:
+    scope: demo
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx-1
+  template:
+    metadata:
+      labels:
+        app: nginx-1
+        color: lime
+    spec:
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          # Change topologyKey to show pods spread across availability zones
+          # Must have more than 3 nodes
+          # topologyKey: topology.kubernetes.io/zone
+          whenUnsatisfiable: DoNotSchedule
+          labelSelector:
+            matchLabels:
+              app: nginx-1
+      tolerations:
+      - key: "kubernetes.azure.com/scalesetpriority"
+        operator: "Equal"
+        value: "spot"
+        effect: "NoSchedule"
+      containers:
+        - name: nginx
+          image: nginx:1.18
+          ports:
+            - containerPort: 80
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 250m
+              memory: 256Mi
+      nodeSelector:
+        kubernetes.io/os: linux

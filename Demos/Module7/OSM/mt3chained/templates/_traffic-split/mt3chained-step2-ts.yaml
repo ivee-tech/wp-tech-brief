@@ -1,0 +1,14 @@
+apiVersion: split.smi-spec.io/v1alpha2
+kind: TrafficSplit
+metadata:
+  name: mt3chained-step2-traffic-split
+  namespace: {{ .Values.namespace }}
+  labels:
+    app: mt3chained
+spec:
+  service: mt3chained-step2-svc.{{ .Values.namespace }}.svc.cluster.local
+  backends:
+  - service: mt3chained-step2-dotnet-svc
+    weight: 50
+  - service: mt3chained-step2-nodejs-svc
+    weight: 50

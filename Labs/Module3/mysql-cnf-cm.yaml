@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mysql-cnf-cm
+data:
+  my.cnf: |
+    !includedir /etc/mysql/conf.d/
+    !includedir /etc/mysql/mysql.conf.d/
+
+    [mysqld]
+    #Set General Log
+    general_log = on
+    general_log_file=/usr/log/general.log

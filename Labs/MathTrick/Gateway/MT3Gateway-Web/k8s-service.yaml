@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mt3gateway-web
+spec:
+  selector:
+    tier: mt3gateway-web
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 80
+      name: http
+  type: LoadBalancer

@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: complex-web-load
+spec:
+  selector:
+    matchLabels:
+      run: cw-load-generator
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        run: cw-load-generator
+    spec:
+      nodeSelector:
+        kubernetes.io/os: linux 
+      tolerations:
+      - key: "kubernetes.azure.com/scalesetpriority"
+        operator: "Equal"
+        value: "spot"
+        effect: "NoSchedule"                 
+      containers:
+      - name: cw-load-generator
+        image: busybox
+        args:
+        - /bin/sh
+        - -c
+        - while sleep 0.01; do wget -q -O- http://complex-web-svc; echo " Sent"; done
+        imagePullPolicy: Always

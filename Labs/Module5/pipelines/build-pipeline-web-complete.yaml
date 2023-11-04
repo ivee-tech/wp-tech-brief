@@ -1,0 +1,48 @@
+trigger:
+- master
+
+resources:
+  repositories:
+  - repository: self
+
+variables:
+  dockerRegistryServiceConnection: 'ACR Connection'
+  imageRepository: 'mt3chained-web'
+  containerRegistry: 'kizsamples.azurecr.io'
+  dockerfilePath: '$(Build.SourcesDirectory)'
+  tag: 'v$(Build.BuildId)'
+  vaultName: 'kvkizdsafjdsg'
+  secretTagName: 'mt3chained-web-tag'
+
+  vmImageName: 'ubuntu-latest'
+
+stages:
+- stage: Build
+  displayName: Build and push stage
+
+  jobs:
+  - job: Build    
+    displayName: Build
+    pool:
+      vmImage: $(vmImageName)
+    steps:
+    - checkout: self
+      
+    - task: Docker@2      
+      displayName: Build and push an image to container registry
+      inputs:
+        command: buildAndPush
+        repository: $(imageRepository)
+        buildContext: $(Build.SourcesDirectory)
+        dockerfile: $(Build.SourcesDirectory)/Dockerfile
+        containerRegistry: $(dockerRegistryServiceConnection)
+        tags: |
+          $(tag),latest
+        
+    - task: AzureCLI@2
+      inputs:
+        azureSubscription: 'Azure Connection'
+        scriptType: 'bash'
+        scriptLocation: 'inlineScript'
+        inlineScript: |
+          az keyvault secret set --vault-name "$(vaultName)" --name "$(secretTagName)" --value "$(tag)"

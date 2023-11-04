@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dep-readiness-probe
+  labels:
+    app: demo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: probes
+  template:
+    metadata:
+      labels:
+        app: probes
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.14.2
+        ports:
+        - containerPort: 80
+        # The kubelet uses readiness probes to know when a container is ready to start accepting traffic. .
+        # Start only AFTER the startupProbe has completed successfully 
+        # Pings the path every 5 seconds.  
+        # Retries it up 2 times or until it succeeds
+        readinessProbe:
+          tcpSocket:
+            port: 80          
+          failureThreshold: 2
+          periodSeconds: 5
+          initialDelaySeconds: 30 

@@ -1,0 +1,25 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: workload2-dep
+  labels:
+    app: demo
+spec:
+  replicas: 2
+  minReadySeconds: 5      
+  selector:
+    matchLabels:
+      app: nginx-2
+  template:
+    metadata:
+      labels:
+        app: nginx-2
+        color: orange
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.17
+        ports:
+          - containerPort: 80                 
+      nodeSelector:
+        kubernetes.io/os: linux
