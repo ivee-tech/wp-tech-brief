@@ -1,4 +1,4 @@
-repo: scubakiz # ktbacr.azurecr.io
+repo: ktbacr.azurecr.io # scubakiz
 namespace: chained
 platform: dotnet
 tags:
@@ -9,6 +9,6 @@ tags:
   mt3chainedstep3: latest 
   mt3chainedstep4: latest 
   mt3chainedstep5: latest
-ikey: 71a02f24-dffe-4cf2-a4f3-fe47f992bc42
+ikey: 9dff455d-d13b-44b7-bb8f-75e8e4905481 #71a02f24-dffe-4cf2-a4f3-fe47f992bc42
    
   
