@@ -1,0 +1,10 @@
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: mt3chained-pdb
+spec:
+  minAvailable: 2
+  selector:
+    matchLabels:
+      # app: mt3chained
+      color: tomato

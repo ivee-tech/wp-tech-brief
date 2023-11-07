@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: dep-statup-probe
+  name: dep-startup-probe
   labels:
     app: demo
 spec:
