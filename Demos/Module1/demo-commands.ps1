@@ -6,6 +6,7 @@ kubectl config current-context
 
 kubectl get ns # namespace 
 kubectl create namespace ns1
+# kubectl delete ns ns1
 kubectl get ns ns1
 
 kubectl run -it --rm nginx01 --image=nginx --restart=Never -n ns1
@@ -13,6 +14,11 @@ kubectl run -it --rm nginx01 --image=nginx --restart=Never -n ns1
 kubectl get pods -n ns1 --show-labels
 kubectl get pod nginx01 -n ns1 -o wide
 kubectl get pod nginx01 -n ns1 -o yaml > nginx01.yaml
+
+kubectl describe po nginx01 -n ns1
+
+kubectl logs nginx01 -n ns1
+kubectl delete po nginx01 -n ns1
 
 kubectl explain pod.spec.containers.image
 

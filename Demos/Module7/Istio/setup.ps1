@@ -23,6 +23,9 @@ az aks create --resource-group $rg --name $aksName --enable-asm
 # enable mesh addon for existing cluster
 az aks mesh enable --resource-group $rg --name $aksName
 
+#switch context
+kubectl config use-context $aksName
+kubectl get nodes
 
 # verify successful installation
 az aks show --resource-group $rg --name $aksName  --query 'serviceMeshProfile.mode'

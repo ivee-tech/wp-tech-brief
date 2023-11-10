@@ -224,3 +224,16 @@ az aks nodepool scale --cluster-name $AKS_NAME `
     --name $NODE_POOL `
     --resource-group $AKS_RESOURCE_GROUP `
     --node-count $NODE_COUNT
+
+
+# goldilocks
+helm repo add fairwinds-stable https://charts.fairwinds.com/stable
+kubectl create namespace goldilocks
+helm install goldilocks --namespace goldilocks fairwinds-stable/goldilocks
+
+# run goldilocks dahsboard
+kubectl -n goldilocks port-forward svc/goldilocks-dashboard 8080:80
+
+# label a NS for goldilocks
+kubectl label ns chained goldilocks.fairwinds.com/enabled=true
+

@@ -1,7 +1,7 @@
 function CleanUp ([string] $done) {
     StartCleanUp $done
     SendMessageToCI "kubectl delete deploy -l app=demo" "Kubectl command:" "Command"
-    kubectl delete -f mt3chained-pdb.yaml
+    kubectl delete -f mt3chained-pdb.yaml -n chained
     ExitScript
 }
 
@@ -15,10 +15,10 @@ SendMessageToCI "The following demo illustrates how to use PodDisruptionBudgets"
 DisplayStep "Deploy the mt3chained application, separately from PDB"
 
 DisplayStep "Create a PodDisruptionBudget"
-kubectl apply -f mt3chained-pdb.yaml
+kubectl apply -f mt3chained-pdb.yaml -n chained
 
 DisplayStep "Wait until PodDisruptionBudget is configured"
-kubectl describe pdb mt3chained-pdb
+kubectl describe pdb mt3chained-pdb -n chained
 
 DisplayStep "Identify the node(s) the application is running on"
 $ns = 'chained'
