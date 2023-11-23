@@ -19,6 +19,7 @@ az group create --name $rg --location $location
 
 # create AKS cluster with mesh addon enabled
 az aks create --resource-group $rg --name $aksName --enable-asm
+az aks get-credentials -g $rg -n $aksName
 
 # enable mesh addon for existing cluster
 az aks mesh enable --resource-group $rg --name $aksName
@@ -50,7 +51,7 @@ kubectl get services
 kubectl get pods
 
 
-# enable ingress gateway
+# enable external ingress gateway
 az aks mesh enable-ingress-gateway --resource-group $rg --name $aksName --ingress-gateway-type external
 
 # check the service mapped to the ingress gateway
