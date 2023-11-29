@@ -36,6 +36,7 @@ spec:
         ports:
         - containerPort: 80
           protocol: TCP
+        resources: {}
         volumeMounts:
         - name: tempvol
           # location of home page for nginx
@@ -57,6 +58,7 @@ spec:
             memory: 256Mi
       - name: counter
         image: centos:7
+        resources: {}
         command:
           - "bin/bash"
           - "-c"

@@ -18,6 +18,7 @@ spec:
           image: nginx:1.18
           ports:
             - containerPort: 80
+          resources: {}
           volumeMounts:              
           - name: disk-volume
             mountPath: /disk

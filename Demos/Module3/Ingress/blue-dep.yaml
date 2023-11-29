@@ -24,6 +24,7 @@ spec:
         - containerPort: 80
           protocol: TCP
         imagePullPolicy: Always
+        resources: {}
         env: 
         - name: IMAGE_COLOR
           value: blue

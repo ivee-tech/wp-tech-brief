@@ -51,7 +51,7 @@ kubectl get services
 kubectl get pods
 
 
-# enable external ingress gateway
+# ONE-OFF enable external ingress gateway
 az aks mesh enable-ingress-gateway --resource-group $rg --name $aksName --ingress-gateway-type external
 
 # check the service mapped to the ingress gateway
@@ -72,7 +72,7 @@ $GATEWAY_URL_EXTERNAL
 curl -s "http://${GATEWAY_URL_EXTERNAL}/productpage" | findstr "<title>"
 
 
-# enable internal ingress gateway
+# ONE-OFF enable internal ingress gateway
 az aks mesh enable-ingress-gateway --resource-group $rg --name $aksName --ingress-gateway-type internal
 
 # check the service mapped to the ingress gateway

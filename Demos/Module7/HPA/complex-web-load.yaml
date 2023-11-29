@@ -27,3 +27,4 @@ spec:
         - -c
         - while sleep 0.01; do wget -q -O- http://complex-web-svc; echo " Sent"; done
         imagePullPolicy: Always
+        resources: {}

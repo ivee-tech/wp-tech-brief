@@ -22,6 +22,7 @@ spec:
         # The kubelet uses startup probes to know when a container application has started
         # Pings the port every 10 seconds.  
         # Retries it upto 30 times or until it succeeds
+        resources: {}
         startupProbe:
           httpGet:
             path: /healthy

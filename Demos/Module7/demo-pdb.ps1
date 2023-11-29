@@ -25,7 +25,7 @@ $ns = 'chained'
 kubectl get pods -n $ns -o wide
 
 DisplayStep "Drain the desired node"
-$nodeName = '' # "<node-name>"
+$nodeName = 'aks-nodepool2-23264799-vmss00002u' # "<node-name>"
 kubectl get pods --field-selector spec.nodeName=$nodeName -n $ns
 kubectl drain $nodeName --ignore-daemonsets # --dry-run
 

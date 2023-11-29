@@ -25,6 +25,7 @@ spec:
           envFrom:
             - configMapRef:
                 name: simple-configmap
+          resources: {}
           env:
             - name: MD_SERVICE_MAP_FILE
               value: /config/service-mappings.json

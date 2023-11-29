@@ -35,3 +35,4 @@ spec:
             - name: MAX_SLEEP_INTERVAL
               value: "15000"              
           imagePullPolicy: IfNotPresent
+          resources: {}

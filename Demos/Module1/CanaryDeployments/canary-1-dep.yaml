@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: canary-1-dep
 spec:
-  replicas: 3
+  replicas: 4
   selector:
     matchLabels:
        target: canary-pod       
@@ -24,6 +24,7 @@ spec:
         - containerPort: 80
           protocol: TCP
         imagePullPolicy: Always
+        resources: {}
         env: 
         - name: IMAGE_COLOR
           value: yellow            
