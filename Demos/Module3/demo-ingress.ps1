@@ -46,6 +46,9 @@ DisplayStep "Next Step - Creates Ingress rules for each service"
 SendMessageToCI "kubectl apply -f colors-ingress.yaml -n development" "Kubectl command:" "Command"
 kubectl apply -f colors-ingress.yaml -n development
 
+# kubectl rollout restart deployment yellow-dep -n development
+
+
 DisplayStep "Verify all the rules work: http://<ip>/blue/ etc"
 
 DisplayStep "Next Step - Change all the other services to ClusterIP"

@@ -1,0 +1,39 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: rose-app-ingress
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    cert-manager.io/cluster-issuer: letsencrypt
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+    nginx.ingress.kubernetes.io/use-regex: "true"
+spec:
+  tls:
+  - hosts:
+    - zipzapp.tech
+    secretName: tls-secret
+  rules:
+  - host: zipzapp.tech
+    http:
+      paths:
+      - path: /demo-app(/|$)(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: demo-app
+            port:
+              number: 80
+      - path: /rose-app(/|$)(.*)
+        pathType: Prefix
+        backend:
+          service:
+            name: rose-app-int
+            port:
+              number: 2999
+      # - path: /(.*)
+        # pathType: Prefix
+        # backend:
+          # service:
+            # name: demo-app
+            # port:
+              # number: 80

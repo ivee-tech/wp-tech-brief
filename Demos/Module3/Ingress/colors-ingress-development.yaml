@@ -4,30 +4,41 @@ metadata:
   annotations:
     kubernetes.io/ingress.class: nginx
     nginx.ingress.kubernetes.io/rewrite-target: /$2
-    nginx.ingress.kubernetes.io/use-regex: "true"
+    certmanager.k8s.io/acme-challenge-type: dns01
+    certmanager.k8s.io/acme-dns01-provider: azuredns
+    certmanager.k8s.io/cluster-issuer: letsencrypt-production
+    ingress.kubernetes.io/force-ssl-redirect: "true"
+    ingress.kubernetes.io/ssl-redirect: "true"    
   name: colors-ingress-development
 spec:
   rules:
-    - http:
+    # - host: 'fdpo.zipzapp.app'
+    - host: 'colors.zipzapp.tech'
+      http:
         paths:
         - path: /development/blue(/|$)(.*)
-          pathType: Prefix
+          pathType: ImplementationSpecific
           backend:
             service: 
               name: blue-svc
               port: 
                 number: 8100
         - path: /development/red(/|$)(.*)
-          pathType: Prefix
+          pathType: ImplementationSpecific
           backend:
             service: 
               name: red-svc
               port: 
                 number: 8100         
         - path: /development/yellow(/|$)(.*)
-          pathType: Prefix
+          pathType: ImplementationSpecific
           backend:
             service: 
               name: yellow-svc
               port: 
-                number: 8100                   
+                number: 8100     
+  tls:
+  - hosts:
+    # - 'fdpo.zipzapp.app'
+    - 'colors.zipzapp.tech'
+    secretName: www-wildcard-tls              
