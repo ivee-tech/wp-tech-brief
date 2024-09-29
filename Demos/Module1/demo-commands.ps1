@@ -3,6 +3,7 @@
 ## a - Core Concepts
 
 kubectl config current-context
+kubectl get nodes
 
 kubectl get ns # namespace 
 kubectl create namespace ns1
@@ -31,13 +32,14 @@ kubectl get pods -n ns1 --selector=app=myapp --show-labels
 
 kubectl label pods nginx01 app- -n ns1
 
-kubectl run nginx01 --image=nginx --restart=Never -n mynamespace --dry-run=client -o yaml > nginx01.yaml
+kubectl run nginx01 --image=nginx --restart=Never -n ns1 --dry-run=client -o yaml > nginx01.yaml
 cat nginx01.yaml
 kubectl apply -f .\nginx01.yaml
 
 kubectl run -it --rm busybox001 --image=busybox --restart=Never -n mynamespace -- env
 
 kubectl run busybox001 --image=busybox --restart=Never -n mynamespace --command -o yaml --dry-run=client  -- env > busybox001.yaml
+kubectl run busybox001 --image=busybox --restart=Never -n ns1
 
 kubectl create -f .\busybox001.yaml 
 kubectl describe pod busybox001 -n mynamespace 

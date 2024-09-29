@@ -31,6 +31,7 @@ az aks create --node-count $NODE_COUNT `
 
 kubectl config get-contexts
 kubectl config current-context
+kubectl config use-context $AKS_NAME
 
 # connect to the cluster
 az aks get-credentials --name $AKS_NAME `
@@ -226,4 +227,16 @@ az aks nodepool scale --cluster-name $AKS_NAME `
     --node-count $NODE_COUNT
 
 
+# disable monitoring
+$rg = 'k8s-tech-brief-rg'
+$aksName = 'ktb-aks'
+az aks disable-addons -a monitoring -n $aksName -g $rg
 
+
+# upgrade
+$rg = 'k8s-tech-brief-rg'
+$aksName = 'ktb-aks'
+az aks get-upgrades --resource-group $rg --name $aksName --output table
+# default  k8s-tech-brief-rg  1.25.6           1.27.9, 1.27.13
+$k8sVersion = '1.27.13'
+az aks upgrade --resource-group $rg --name $aksName --kubernetes-version $k8sVersion

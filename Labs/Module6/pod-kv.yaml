@@ -21,6 +21,7 @@ spec:
             name: k8s-secret
             key: MySecret
       # END NEW SECTION
+      resources: {}
   volumes:
     - name: secrets-store01
       csi:
