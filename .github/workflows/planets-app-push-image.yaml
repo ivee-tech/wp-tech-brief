@@ -53,19 +53,6 @@ jobs:
         docker build -t $IMG .
         docker tag ${img} $REGISTRY/$RNS/$IMG
 
-    - name: Run trivy vulnerability scanner
-      run: |
-        docker run --rm -v /home/sysadmin/.docker:/root/.docker -v /tmp/results:/app/results \
-          daradu/trivy:0.53.0 image ${REGISTRY}/${RNS}/${IMG} \
-          --exit-code 0 --format template --template "@contrib/sarif.tpl" --output /app/results/trivy-results.sarif \
-          --scanners vuln,config,secret
-
-    - name: Publish results
-      uses: actions/upload-artifact@v2
-      with:
-        name: results
-        path: /tmp/results/trivy-results.sarif
-
     - name: Push container image to ACR
       run: |
         docker push ${REGISTRY}/${RNS}/${IMG}
