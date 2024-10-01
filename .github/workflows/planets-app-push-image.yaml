@@ -46,13 +46,15 @@ jobs:
 
     - name: Build container image
       run: |
-        export img="planets-web-app:$NEWTAG"
+        export img="${IMG}:$NEWTAG"
         echo "IMG=$img" >> $GITHUB_ENV
+        echo "IMG: ${IMG}"
         az acr login --name $ACRNAME
         cd ${GITHUB_WORKSPACE}/Demos/planets
-        docker build -t $IMG .
-        docker tag ${img} $REGISTRY/$RNS/$IMG
+        docker build -t ${IMG} .
+        docker tag ${IMG} ${REGISTRY}/${RNS}/${IMG}
 
     - name: Push container image to ACR
       run: |
+        echo "IMG: ${IMG}"
         docker push ${REGISTRY}/${RNS}/${IMG}
