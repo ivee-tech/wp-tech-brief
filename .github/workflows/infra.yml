@@ -49,24 +49,3 @@ jobs:
         ARM_CLIENT_SECRET: ${{ secrets.AZURE_CLIENT_SECRET }}
         ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
         ARM_TENANT_ID: ${{ secrets.AZURE_TENANT_ID }}
-
-    - name: Get Resource Group Name
-      id: get_rg_name
-      run: echo "::set-output name=resource_group_name::$(terraform output -raw resource_group_name)"
-
-    - name: Get AKS Cluster Name
-      id: get_aks_name
-      run: echo "::set-output name=kubernetes_cluster_name::$(terraform output -raw kubernetes_cluster_name)"
-
-    - name: Get AKS Credentials
-      run: az aks get-credentials --resource-group ${{ steps.get_rg_name.outputs.resource_group_name }} --name ${{ steps.get_aks_name.outputs.kubernetes_cluster_name }}
-
-    - name: Test Deployment
-      run: |
-        kubectl get nodes
-
-    # - name: Deploy Application
-    #   run: |
-    #     kubectl apply -f aks-store-quickstart.yaml
-    #     kubectl get pods
-    #     kubectl get service store-front --watch
