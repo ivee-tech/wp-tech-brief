@@ -240,3 +240,12 @@ az aks get-upgrades --resource-group $rg --name $aksName --output table
 # default  k8s-tech-brief-rg  1.25.6           1.27.9, 1.27.13
 $k8sVersion = '1.27.13'
 az aks upgrade --resource-group $rg --name $aksName --kubernetes-version $k8sVersion
+
+
+# KQL
+<#
+KubePodInventory
+| where TimeGenerated > ago(1h)
+| join kind = inner(ContainerLogV2) on $left.ContainerID == $right.ContainerId
+| project TimeGenerated, Computer, PodName=Name, ContainerName=split(ContainerName, "/",1)[0], LogEntry
+#>

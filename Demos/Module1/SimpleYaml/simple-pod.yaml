@@ -21,6 +21,7 @@ spec:
       value: bbbb
     - name: myvar4
       value: eeeee
+    resources: {}
 
     
 

@@ -3,7 +3,7 @@
 ## a - Core Concepts
 
 kubectl config current-context
-kubectl get nodes
+kubectl get nodes -o wide
 
 kubectl get ns # namespace 
 kubectl create namespace ns1
