@@ -14,6 +14,11 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v2
 
+    - name: Azure Login
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
     - name: Set up Terraform
       uses: hashicorp/setup-terraform@v1
       with:
@@ -28,25 +33,20 @@ jobs:
     - name: Terraform Apply
       run: terraform apply -auto-approve main.tfplan
 
-    - name: Get Resource Group Name
-      id: get_rg_name
-      run: echo "::set-output name=resource_group_name::$(terraform output -raw resource_group_name)"
+    # - name: Get Resource Group Name
+    #   id: get_rg_name
+    #   run: echo "::set-output name=resource_group_name::$(terraform output -raw resource_group_name)"
 
-    - name: Get AKS Cluster Name
-      id: get_aks_name
-      run: echo "::set-output name=kubernetes_cluster_name::$(terraform output -raw kubernetes_cluster_name)"
+    # - name: Get AKS Cluster Name
+    #   id: get_aks_name
+    #   run: echo "::set-output name=kubernetes_cluster_name::$(terraform output -raw kubernetes_cluster_name)"
 
-    - name: Azure Login
-      uses: azure/login@v1
-      with:
-        creds: ${{ secrets.AZURE_CREDENTIALS }}
+    # - name: Get AKS Credentials
+    #   run: az aks get-credentials --resource-group ${{ steps.get_rg_name.outputs.resource_group_name }} --name ${{ steps.get_aks_name.outputs.kubernetes_cluster_name }}
 
-    - name: Get AKS Credentials
-      run: az aks get-credentials --resource-group ${{ steps.get_rg_name.outputs.resource_group_name }} --name ${{ steps.get_aks_name.outputs.kubernetes_cluster_name }}
-
-    - name: Test Deployment
-      run: |
-        kubectl get nodes
+    # - name: Test Deployment
+    #   run: |
+    #     kubectl get nodes
 
     # - name: Deploy Application
     #   run: |
