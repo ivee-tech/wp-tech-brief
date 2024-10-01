@@ -1,0 +1,71 @@
+name: Build and Push Docker Image
+
+on:
+  workflow_dispatch:
+  # push:
+  #   branches:
+  #     - main
+
+env:
+  REGISTRY: "ktbacr.azurecr.io"
+  RNS: "itp"
+  IMG: "planets-web-app"
+  ACRNAME: "ktbacr"
+
+jobs:
+  build_push_acr_image:
+    runs-on: self-hosted # ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Obtain Version
+      run: |
+        cd ${GITHUB_WORKSPACE}/Demos/planets
+        dockerfile_path="./Dockerfile"
+        line=$(grep -E 'LABEL VERSION=' "$dockerfile_path")
+        regex='[0-9]+\.[0-9]+\.[0-9]+'
+        [[ $line =~ $regex ]] && tag="${BASH_REMATCH[0]}"
+        echo "Existing tag: $tag"
+        newTag=$tag
+        # You can upgrade the tag here, but it needs to be synced with source control
+        # IFS='.' read -ra ADDR <<< "$tag"
+        # major=${ADDR[0]}
+        # minor=${ADDR[1]}
+        # patch=${ADDR[2]}
+        # let patch++
+        # newTag="$major.$minor.$patch"
+        echo "New tag: $newTag"
+        echo "NEWTAG=$newTag" >> $GITHUB_ENV
+
+    - name: Azure Login
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Build container image
+      run: |
+        export img="planets-web-app:$NEWTAG"
+        echo "IMG=$img" >> $GITHUB_ENV
+        az acr login --name $ACRNAME
+        cd ${GITHUB_WORKSPACE}/Demos/planets
+        docker build -t $IMG .
+        docker tag ${img} $REGISTRY/$RNS/$IMG
+
+    - name: Run trivy vulnerability scanner
+      run: |
+        docker run --rm -v /home/sysadmin/.docker:/root/.docker -v /tmp/results:/app/results \
+          daradu/trivy:0.53.0 image ${REGISTRY}/${RNS}/${IMG} \
+          --exit-code 0 --format template --template "@contrib/sarif.tpl" --output /app/results/trivy-results.sarif \
+          --scanners vuln,config,secret
+
+    - name: Publish results
+      uses: actions/upload-artifact@v2
+      with:
+        name: results
+        path: /tmp/results/trivy-results.sarif
+
+    - name: Push container image to ACR
+      run: |
+        docker push ${REGISTRY}/${RNS}/${IMG}

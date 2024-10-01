@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: planets-web-app
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: planets-web-app
+  template:
+    metadata:
+      labels:
+        app: planets-web-app
+    spec:
+      containers:
+      - name: planets-web-app
+        image: daradu/planets-web-app:latest
+        ports:
+        - containerPort: 80
+        resources: {}

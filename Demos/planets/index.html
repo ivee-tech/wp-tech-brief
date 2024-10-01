@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solar System with Three.js</title>
+    <style>
+        body {
+            margin: 0;
+        }
+
+        canvas {
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://82mou.github.io/threejs/js/OrbitControls.js"></script>
+    <script>
+        // Setup scene, camera, and renderer
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer();
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        // Add lighting
+        const ambientLight = new THREE.AmbientLight(0x404040);
+        scene.add(ambientLight);
+        // hexa code for purple is #800080
+        // const pointLight = new THREE.PointLight(0x800080, 1, 0);
+        // hexa code for yellow is #ffff00
+        //const pointLight = new THREE.PointLight(0xffff00, 1, 0);
+        const pointLight = new THREE.PointLight(0xffffff, 1, 0);
+        pointLight.position.set(50, 50, 50);
+        scene.add(pointLight);
+
+        const textureLoader = new THREE.TextureLoader();
+
+        // Add the sun
+        const sunGeometry = new THREE.SphereGeometry(5, 32, 32);
+        const texture = textureLoader.load('assets/sun.jpg');
+        const sunMaterial = new THREE.MeshStandardMaterial({ map: texture }); // { color: 0xffff00 });
+        const sunMesh = new THREE.Mesh(sunGeometry, sunMaterial);
+        scene.add(sunMesh);
+
+        // Planet data
+        // const planets = [
+        //     { name: 'Mercury', size: 0.383, distance: 5.79, speed: 0.08, rotationSpeed: 0.01, texture: 'assets/mercury.jpg' },
+        //     { name: 'Venus', size: 0.949, distance: 10.82, speed: 0.03, rotationSpeed: 0.006, texture: 'assets/venus.jpg' },
+        //     { name: 'Earth', size: 1, distance: 15, speed: 0.02, rotationSpeed: 0.008, texture: 'assets/earth.jpg' },
+        //     { name: 'Mars', size: 0.532, distance: 22.79, speed: 0.016, rotationSpeed: 0.012, texture: 'assets/mars.jpg' },
+        //     { name: 'Jupiter', size: 11.21, distance: 77.78, speed: 0.004, rotationSpeed: 0.014, texture: 'assets/jupiter.jpg' },
+        //     { name: 'Saturn', size: 9.45, distance: 143.37, speed: 0.002, rotationSpeed: 0.016, texture: 'assets/saturn.jpg' },
+        //     { name: 'Uranus', size: 4.01, distance: 287.1, speed: 0.0008, rotationSpeed: 0.018, texture: 'assets/uranus.jpg' },
+        //     { name: 'Neptune', size: 3.88, distance: 449.5, speed: 0.0004, rotationSpeed: 0.02, texture: 'assets/neptune.jpg' }
+        // ];
+        const planets = [
+            { name: 'Mercury', size: 0.383, distance: 5.79, speed: 0.08, rotationSpeed: 0.01, texture: 'assets/mercury.jpg' },
+            { name: 'Venus', size: 0.949, distance: 10.82, speed: 0.03, rotationSpeed: 0.006, texture: 'assets/venus.jpg' },
+            { name: 'Earth', size: 1, distance: 15, speed: 0.02, rotationSpeed: 0.008, texture: 'assets/earth.jpg' },
+            { name: 'Mars', size: 0.532, distance: 22.79, speed: 0.016, rotationSpeed: 0.012, texture: 'assets/mars.jpg' },
+            { name: 'Jupiter', size: 11.21, distance: 77.78, speed: 0.004, rotationSpeed: 0.014, texture: 'assets/jupiter.jpg' },
+            { name: 'Saturn', size: 9.45, distance: 143.37, speed: 0.002, rotationSpeed: 0.016, texture: 'assets/saturn.jpg' },
+            { name: 'Uranus', size: 4.01, distance: 287.1, speed: 0.0008, rotationSpeed: 0.018, texture: 'assets/uranus.jpg' },
+            { name: 'Neptune', size: 3.88, distance: 449.5, speed: 0.0004, rotationSpeed: 0.02, texture: 'assets/neptune.jpg' }
+        ];
+        // Load textures and create planets and orbits
+        planets.forEach(planet => {
+            // Load texture
+            const texture = textureLoader.load(planet.texture);
+
+            // Create planet mesh
+            const geometry = new THREE.SphereGeometry(planet.size, 32, 32);
+            const material = new THREE.MeshStandardMaterial({ map: texture });
+            const mesh = new THREE.Mesh(geometry, material);
+            scene.add(mesh);
+            planet.mesh = mesh;
+
+            // Create orbit path
+            const orbitGeometry = new THREE.RingGeometry(planet.distance - 0.1, planet.distance + 0.1, 64);
+            const orbitMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff, side: THREE.DoubleSide });
+            const orbit = new THREE.Mesh(orbitGeometry, orbitMaterial);
+            orbit.rotation.x = Math.PI / 2;
+            scene.add(orbit);
+        });
+
+        // Orbit controls
+        const controls = new THREE.OrbitControls(camera, renderer.domElement);
+        camera.position.z = 200;
+
+        // Animation loop
+        function animate() {
+            requestAnimationFrame(animate);
+            const time = Date.now() * 0.0002; // Increase the speed of the orbits
+            planets.forEach(planet => {
+                planet.mesh.rotation.y += planet.rotationSpeed; // Rotate each planet with different speeds
+                const angle = time * planet.speed;
+                planet.mesh.position.x = planet.distance * Math.cos(angle);
+                planet.mesh.position.z = planet.distance * Math.sin(angle);
+            });
+            controls.update();
+            renderer.render(scene, camera);
+        }
+
+        animate();
+
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+    </script>
+</body>
+
+</html>
