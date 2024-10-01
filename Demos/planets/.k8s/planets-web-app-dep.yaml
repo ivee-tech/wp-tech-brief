@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: planets-web-app
-        image: daradu/planets-web-app:{{ .Values.tag }}
+        image: ktbacr.azurecr.io/itp/planets-web-app:{{ .Values.tag }}
         ports:
         - containerPort: 80
         resources: {}
