@@ -17,6 +17,7 @@ spec:
         kubernetes.io/os: linux
       containers:
       - name: nginx
+        resources: {}
         image: nginx:1.18
         ports:
           - containerPort: 8080
@@ -47,4 +48,6 @@ spec:
         command:
           - "bin/bash"
           - "-c"
-          - "sleep 10s;for i in {1.99} ; do echo $i ; sleep -100; done"           
+          - "sleep 10s;for i in {1.99} ; do echo $i ; sleep -100; done"      
+        resources: {}
+     
